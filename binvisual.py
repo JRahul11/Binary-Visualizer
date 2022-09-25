@@ -6,6 +6,7 @@ import urllib.request
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import os
 
 
 
@@ -24,15 +25,18 @@ class BinaryVisualizer():
                 # if(index > 3):
                 #     break
                 try:
-                    self.createBinaryFiles(index, row)
+                    if not os.path.exists(f'binaryFiles\\binaryFiles{index}.bin'):
+                        if index > 1047:
+                            self.createBinaryFiles(index, row)
+                    print(str(index) + ' passed')
                 except Exception as e:
-                    print(e)
+                    print(index, e)
         
     def createBinaryFiles(self, index, row):
         url = 'http://' + row[0]
         sourceCode = urllib.request.urlopen(url)
         binaryCode = str(base64.b64encode(sourceCode.read()))[2:-1]
-        binFilePath = f'binaryFiles\\binaryData{index}.bin'
+        binFilePath = f'binaryFiles\\binaryFiles{index}.bin'
         binFile = open(binFilePath, 'w')
         binFile.write(binaryCode)
         binFile.close()
@@ -58,7 +62,10 @@ class BinaryVisualizer():
         del arr
         matrix = arr_padded.reshape(linelength, linelength)
         del arr_padded
-        output_filename = f'imageFiles\\image{index}.png'
+        if row[1] == 'bad':
+            output_filename = f'imageFiles\\badImages\\{index}.png'
+        else:
+            output_filename = f'imageFiles\\goodImages\\{index}.png'
         fig, ax = plt.subplots()
         ax.matshow(matrix)
         del matrix
