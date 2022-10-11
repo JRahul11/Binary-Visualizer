@@ -1,4 +1,3 @@
-#  source /d/Documents/SEM 7/Binary Visualizer/venv/Scripts/activate
 
 import base64
 import csv
@@ -28,7 +27,7 @@ class BinaryVisualizer():
                 #     break
                 try:
                     if not os.path.exists(f'binaryFiles\\binaryFiles{index}.bin'):
-                        if index > 26083:
+                        if index > 50011:           #TODO: Change this index
                             self.createBinaryFiles(index, row)
                 except Exception as e:
                     print(index, e)
