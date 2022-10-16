@@ -83,3 +83,16 @@ class BinaryVisualizer():
 
 
 BinaryVisualizer()
+
+# Explaination
+# 1 2 3 4 5
+
+# 3 x 3 Matrix
+
+# Padding
+# 1 2 3 4 5 0 0 0 0 
+
+# Final Matrix
+# 1 2 3
+# 4 5 0
+# 0 0 0
