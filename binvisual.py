@@ -1,7 +1,6 @@
 
 import base64
 import csv
-import hashlib
 import math
 import urllib.request
 import matplotlib.pyplot as plt
@@ -44,35 +43,34 @@ class BinaryVisualizer():
         self.createImages(index, row, binFilePath)
     
     def createImages(self, index, row, binFilePath):
-        BUF_SIZE = 65536
-        md5 = hashlib.md5()
-        sha1 = hashlib.sha1()
-        with open(binFilePath, 'rb') as f:
-            while True:
-                data = f.read(BUF_SIZE)
-                if not data:
-                    break
-                md5.update(data)
-                sha1.update(data)
-        md5 = md5.hexdigest()
-        sha1 = sha1.hexdigest()
+        
+        # Convert binary file to array with numbers
         arr = np.fromfile(binFilePath, dtype=np.ubyte)
         linelength = math.ceil(math.sqrt(len(arr)))
         len_missing = (linelength**2 - len(arr))
+        
+        # Padding array with 0's to make perfect square
         arr_padded = np.pad(arr, (0, len_missing), mode="constant", constant_values=0)
         del arr
+        
+        # Reshaped array to matrix
         matrix = arr_padded.reshape(linelength, linelength)
         del arr_padded
+        
         if row[1] == 'bad':
             output_filename = f'imageFiles\\badImages\\{index}.png'
         else:
             output_filename = f'imageFiles\\goodImages\\{index}.png'
         fig, ax = plt.subplots()
+        
+        # Visualize matrix to image
         ax.matshow(matrix)
         del matrix
+        
         ax.set_xlabel("URL: " + row[0][:45] + "\nResult: " + row[1])
         plt.title(binFilePath, loc="left", fontweight="bold")
         plt.savefig(output_filename)
+        
         # Crop the image
         # left = 150
         # top = 60
