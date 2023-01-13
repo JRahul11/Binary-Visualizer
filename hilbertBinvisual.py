@@ -394,9 +394,9 @@ def drawmap_square(map, size, csource, name, prog):
 
 def createImages(index, row, htmlFilePath):
     d = open(htmlFilePath, encoding="utf8").read()
-    if row[1] == 'bad':
+    if row[2] == 'bad':
         output_filename = f'hilbertImages\\badImages\\bad-{index}.png'
-    else:
+    elif row[2] == 'good':
         output_filename = f'hilbertImages\\goodImages\\good-{index}.png'
     
     csource = ColorHilbert(d, None)
@@ -404,7 +404,7 @@ def createImages(index, row, htmlFilePath):
     drawmap_square("hilbert", 256, csource, output_filename, prog)
 
 def createHTMLFiles(index, row):
-    url = 'http://' + row[0]
+    url = 'http://' + row[1]
     r = requests.get(url)
     if (r.status_code == 200):
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -414,21 +414,21 @@ def createHTMLFiles(index, row):
         htmlFile.close()
         createImages(index, row, htmlFilePath)
         print()
-        print(str(index) +  " passed " + row[0])
+        print(str(index) +  " passed " + row[1])
     else:
-        print(str(index) + " skipped " + row[0])
+        print(str(index) + " skipped " + row[1])
 
 def main():
-    with open('phish_data.csv', encoding='utf-8') as file:
+    with open('new_phish_data.csv', encoding='utf-8') as file:
         rows = csv.reader(file)
         index = 0
         for row in rows:
             index = index + 1
             try:
                 if not os.path.exists(f'htmlFiles\\htmlFiles{index}.html'):
-                    if index > 100:           #TODO: Change this index
+                    if index > 0:           #TODO: Change this index
                         createHTMLFiles(index, row)
             except Exception as e:
-                print(str(index) + " error " + row[0])
+                print(str(index) + " error " + row[1])
 
 main()
